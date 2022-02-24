@@ -14,6 +14,7 @@ class AbstractStubServer : public jsonrpc::AbstractServer<AbstractStubServer>
         {
             this->bindAndAddNotification(jsonrpc::Procedure("connectToMaster", jsonrpc::PARAMS_BY_NAME,  NULL), &AbstractStubServer::connectToMasterI);
             this->bindAndAddNotification(jsonrpc::Procedure("connectToPrimaryReplica", jsonrpc::PARAMS_BY_NAME,  NULL), &AbstractStubServer::connectToPrimaryReplicaI);
+            this->bindAndAddMethod(jsonrpc::Procedure("getAddressPrimaryReplica", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "name",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::getAddressPrimaryReplicaI);
         }
 
         inline virtual void connectToMasterI(const Json::Value &request)
@@ -26,8 +27,13 @@ class AbstractStubServer : public jsonrpc::AbstractServer<AbstractStubServer>
             (void)request;
             this->connectToPrimaryReplica();
         }
+        inline virtual void getAddressPrimaryReplicaI(const Json::Value &request, Json::Value &response)
+        {
+            response = this->getAddressPrimaryReplica(request["name"].asString());
+        }
         virtual void connectToMaster() = 0;
         virtual void connectToPrimaryReplica() = 0;
+        virtual std::string getAddressPrimaryReplica(const std::string& name) = 0;
 };
 
 #endif //JSONRPC_CPP_STUB_ABSTRACTSTUBSERVER_H_

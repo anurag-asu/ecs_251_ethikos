@@ -8,7 +8,7 @@
  ************************************************************************/
 #include <iostream>
 #include "gen/abstractstubserver.h"
-#include <jsonrpccpp/server/connectors/httpserver.h>
+#include "jsonrpccpp/server/connectors/httpserver.h"
 #include <stdio.h>
 
 using namespace jsonrpc;
@@ -20,16 +20,22 @@ public:
 
   virtual void connectToMaster();
   virtual void connectToPrimaryReplica();
+  virtual std::string getAddressPrimaryReplica(const std::string& name);
 };
 
 MasterServer::MasterServer(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
 void MasterServer::connectToMaster() { cout << "client got connected" << endl; }
 
+void MasterServer::connectToPrimaryReplica(){}
+
+std::string MasterServer::getAddressPrimaryReplica(const std::string &fileName) {
+  return "http://localhost:8384";
+}
+
 int main() {
   HttpServer httpserver(8383);
-  MasterServer s(httpserver,
-                 JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
+  MasterServer s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   s.StartListening();
   cout << "hit ctrl+c to stop the server" << endl;
   getchar();

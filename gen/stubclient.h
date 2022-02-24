@@ -24,6 +24,16 @@ class StubClient : public jsonrpc::Client
             p = Json::nullValue;
             this->CallNotification("connectToPrimaryReplica",p);
         }
+        std::string getAddressPrimaryReplica(const std::string& name) throw (jsonrpc::JsonRpcException)
+        {
+            Json::Value p;
+            p["name"] = name;
+            Json::Value result = this->CallMethod("getAddressPrimaryReplica",p);
+            if (result.isString())
+                return result.asString();
+            else
+                throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+        }
 };
 
 #endif //JSONRPC_CPP_STUB_STUBCLIENT_H_

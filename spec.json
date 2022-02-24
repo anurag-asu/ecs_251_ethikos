@@ -4,5 +4,12 @@
 	},
     {
 		"name": "connectToPrimaryReplica"
+	},
+	{
+		"name": "getAddressPrimaryReplica",
+		"params": {
+			"name": "fileName"
+		},
+		"returns" : "ReplicaAddress"
 	}
 ]
