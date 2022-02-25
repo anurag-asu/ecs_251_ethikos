@@ -37,9 +37,10 @@ class StubClient : public jsonrpc::Client
             else
                 throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }
-        Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
+        Json::Value CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
+            p["action"] = action;
             p["content"] = content;
             p["fhandle"] = fhandle;
             p["filename"] = filename;

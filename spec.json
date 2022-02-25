@@ -25,6 +25,7 @@
 	{
 		"name": "CommitOrAbort",
 		"params": {
+			"action": "commit",
 			"filename": "1234567890",
             "fhandle": "1234567890",
             "owner_vsID": "default",

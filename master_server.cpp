@@ -17,7 +17,7 @@ public:
 
   virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-  virtual Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
 MasterServer::MasterServer(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
@@ -26,9 +26,9 @@ Json::Value MasterServer::FileLookUp(const std::string& fhandle, const std::stri
   const std::string& owner_vsID) { 
   Json::Value result;
   
-  result["host_urls"].append("http://locahost:8384");
-  result["host_urls"].append("http://locahost:8385");
-  result["host_urls"].append("http://locahost:8386");
+  result["host_urls"].append("http://localhost:8384");
+  result["host_urls"].append("http://localhost:8385");
+  result["host_urls"].append("http://localhost:8386");
 
   return result;
 }
@@ -38,7 +38,7 @@ Json::Value MasterServer::GetVote(int content, const std::string& fhandle, const
   return result;
 }
 
-Json::Value MasterServer::CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+Json::Value MasterServer::CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
   Json::Value result;
   return result;
 }

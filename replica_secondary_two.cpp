@@ -14,13 +14,16 @@
 using namespace jsonrpc;
 using namespace std;
 
+// one map is private
+// second one is public  
+
 class ReplicaSecondaryTwo : public AbstractStubServer {
 public:
   ReplicaSecondaryTwo(AbstractServerConnector &connector, serverVersion_t type);
 
   virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-  virtual Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value  CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
 ReplicaSecondaryTwo::ReplicaSecondaryTwo(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
@@ -32,10 +35,11 @@ Json::Value ReplicaSecondaryTwo::FileLookUp(const std::string& fhandle, const st
 
 Json::Value ReplicaSecondaryTwo::GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
   Json::Value result;
-  return result; 
+  result["status"] = "commit";
+  return result;  
 }
 
-Json::Value ReplicaSecondaryTwo::CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+Json::Value ReplicaSecondaryTwo:: CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
   Json::Value result;
   return result; 
 }

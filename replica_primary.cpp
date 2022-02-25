@@ -20,7 +20,7 @@ public:
 
   virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-  virtual Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value  CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
 ReplicaPrimary::ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
@@ -32,10 +32,11 @@ Json::Value ReplicaPrimary::FileLookUp(const std::string& fhandle, const std::st
 
 Json::Value ReplicaPrimary::GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
   Json::Value result;
+  result["status"] = "commit";
   return result; 
 }
 
-Json::Value ReplicaPrimary::CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
   Json::Value result;
   return result; 
 }
