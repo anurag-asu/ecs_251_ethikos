@@ -12,28 +12,26 @@ class AbstractStubServer : public jsonrpc::AbstractServer<AbstractStubServer>
     public:
         AbstractStubServer(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<AbstractStubServer>(conn, type)
         {
-            this->bindAndAddNotification(jsonrpc::Procedure("connectToMaster", jsonrpc::PARAMS_BY_NAME,  NULL), &AbstractStubServer::connectToMasterI);
-            this->bindAndAddNotification(jsonrpc::Procedure("connectToPrimaryReplica", jsonrpc::PARAMS_BY_NAME,  NULL), &AbstractStubServer::connectToPrimaryReplicaI);
-            this->bindAndAddMethod(jsonrpc::Procedure("getAddressPrimaryReplica", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "name",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::getAddressPrimaryReplicaI);
+            this->bindAndAddMethod(jsonrpc::Procedure("FileLookUp", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::FileLookUpI);
+            this->bindAndAddMethod(jsonrpc::Procedure("GetVote", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "content",jsonrpc::JSON_INTEGER,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::GetVoteI);
+            this->bindAndAddMethod(jsonrpc::Procedure("CommitOrAbort", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "content",jsonrpc::JSON_INTEGER,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::CommitOrAbortI);
         }
 
-        inline virtual void connectToMasterI(const Json::Value &request)
+        inline virtual void FileLookUpI(const Json::Value &request, Json::Value &response)
         {
-            (void)request;
-            this->connectToMaster();
+            response = this->FileLookUp(request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
         }
-        inline virtual void connectToPrimaryReplicaI(const Json::Value &request)
+        inline virtual void GetVoteI(const Json::Value &request, Json::Value &response)
         {
-            (void)request;
-            this->connectToPrimaryReplica();
+            response = this->GetVote(request["content"].asInt(), request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
         }
-        inline virtual void getAddressPrimaryReplicaI(const Json::Value &request, Json::Value &response)
+        inline virtual void CommitOrAbortI(const Json::Value &request, Json::Value &response)
         {
-            response = this->getAddressPrimaryReplica(request["name"].asString());
+            response = this->CommitOrAbort(request["content"].asInt(), request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
         }
-        virtual void connectToMaster() = 0;
-        virtual void connectToPrimaryReplica() = 0;
-        virtual std::string getAddressPrimaryReplica(const std::string& name) = 0;
+        virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
+        virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
+        virtual Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
 };
 
 #endif //JSONRPC_CPP_STUB_ABSTRACTSTUBSERVER_H_

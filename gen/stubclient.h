@@ -12,25 +12,41 @@ class StubClient : public jsonrpc::Client
     public:
         StubClient(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type = jsonrpc::JSONRPC_CLIENT_V2) : jsonrpc::Client(conn, type) {}
 
-        void connectToMaster() throw (jsonrpc::JsonRpcException)
+        Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
-            p = Json::nullValue;
-            this->CallNotification("connectToMaster",p);
+            p["fhandle"] = fhandle;
+            p["filename"] = filename;
+            p["owner_vsID"] = owner_vsID;
+            Json::Value result = this->CallMethod("FileLookUp",p);
+            if (result.isObject())
+                return result;
+            else
+                throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }
-        void connectToPrimaryReplica() throw (jsonrpc::JsonRpcException)
+        Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
-            p = Json::nullValue;
-            this->CallNotification("connectToPrimaryReplica",p);
+            p["content"] = content;
+            p["fhandle"] = fhandle;
+            p["filename"] = filename;
+            p["owner_vsID"] = owner_vsID;
+            Json::Value result = this->CallMethod("GetVote",p);
+            if (result.isObject())
+                return result;
+            else
+                throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }
-        std::string getAddressPrimaryReplica(const std::string& name) throw (jsonrpc::JsonRpcException)
+        Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
-            p["name"] = name;
-            Json::Value result = this->CallMethod("getAddressPrimaryReplica",p);
-            if (result.isString())
-                return result.asString();
+            p["content"] = content;
+            p["fhandle"] = fhandle;
+            p["filename"] = filename;
+            p["owner_vsID"] = owner_vsID;
+            Json::Value result = this->CallMethod("CommitOrAbort",p);
+            if (result.isObject())
+                return result;
             else
                 throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }

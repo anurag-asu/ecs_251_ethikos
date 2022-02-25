@@ -1,15 +1,37 @@
 [
 	{
-		"name": "connectToMaster"
+        "name": "FileLookUp",
+        "params": {
+            "filename": "1234567890",
+            "fhandle": "1234567890",
+            "owner_vsID": "default"
+        },
+        "returns": {
+			"replica_host_urls": ["","",""]
+        }
 	},
     {
-		"name": "connectToPrimaryReplica"
+		"name": "GetVote",
+		"params": {
+			"filename": "1234567890",
+            "fhandle": "1234567890",
+            "owner_vsID": "default",
+			"content": 10001278326
+		},
+		"returns": {
+			"status": "true"
+		}
 	},
 	{
-		"name": "getAddressPrimaryReplica",
+		"name": "CommitOrAbort",
 		"params": {
-			"name": "fileName"
+			"filename": "1234567890",
+            "fhandle": "1234567890",
+            "owner_vsID": "default",
+			"content": 10001278326
 		},
-		"returns" : "ReplicaAddress"
+		"returns": {
+			"status": "true"
+		}
 	}
 ]

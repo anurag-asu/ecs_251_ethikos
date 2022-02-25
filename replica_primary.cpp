@@ -18,18 +18,27 @@ class ReplicaPrimary : public AbstractStubServer {
 public:
   ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type);
 
-  virtual void connectToMaster();
-  virtual void connectToPrimaryReplica();
-  virtual std::string getAddressPrimaryReplica(const std::string& name);
+  virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
 ReplicaPrimary::ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
-void ReplicaPrimary::connectToPrimaryReplica() { cout << "client got connected to primary replica" << endl; }
+Json::Value ReplicaPrimary::FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
+  Json::Value result;
+  return result; 
+}
 
-std::string ReplicaPrimary::getAddressPrimaryReplica(const std::string &sname) {return "";}
+Json::Value ReplicaPrimary::GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
+  Json::Value result;
+  return result; 
+}
 
-void ReplicaPrimary::connectToMaster() {}
+Json::Value ReplicaPrimary::CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+  Json::Value result;
+  return result; 
+}
 
 int main() {
   HttpServer httpserver(8384);
