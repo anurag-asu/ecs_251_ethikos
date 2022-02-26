@@ -31,7 +31,30 @@ int main() {
       string vote3 = c3.GetVote(1, "","","");
       cout<<vote3<<endl;
 
-      // send commit to all replicas
+      // send commit/abort to all replicas
+
+      if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
+        bool s1 = c1.CommitOrAbort("commit", 1, "", "", "");
+        bool s2 = c1.CommitOrAbort("commit", 1, "", "", "");
+        bool s3 = c1.CommitOrAbort("commit", 1, "", "", "");
+
+        if(s1 && s2 && s3) {
+          cout<<"success"<<endl;
+        } else {
+          cout<<"failure"<<endl;
+        }
+
+      } else {
+        bool s1 = c1.CommitOrAbort("abort", 1, "", "", "");
+        bool s2 = c1.CommitOrAbort("abort", 1, "", "", "");
+        bool s3 = c1.CommitOrAbort("abort", 1, "", "", "");
+
+        if(s1 && s2 && s3) {
+          cout<<"success"<<endl;
+        } else {
+          cout<<"failure"<<endl;
+        }
+      }
 
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;

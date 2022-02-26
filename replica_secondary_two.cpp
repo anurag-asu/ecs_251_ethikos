@@ -41,6 +41,7 @@ Json::Value ReplicaSecondaryTwo::GetVote(int content, const std::string& fhandle
 
 Json::Value ReplicaSecondaryTwo:: CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
   Json::Value result;
+  result["status"] = true;
   return result; 
 }
 

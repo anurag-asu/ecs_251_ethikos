@@ -38,6 +38,7 @@ Json::Value ReplicaPrimary::GetVote(int content, const std::string& fhandle, con
 
 Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
   Json::Value result;
+  result["status"] = true;
   return result; 
 }
 

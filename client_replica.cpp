@@ -22,3 +22,16 @@ string ClientReplica::GetVote(int content, const std::string& fhandle, const std
         cerr << e.GetMessage() << endl;
     }
 }
+
+bool ClientReplica::CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
+    HttpClient replicaClient(this->replicaAddress);
+    StubClient primaryClient(replicaClient, JSONRPC_CLIENT_V2);
+    Json::Value val;
+    
+    try {
+         val = primaryClient.CommitOrAbort(action, content, fhandle, filename, owner_vsID);
+         return val.get("status", false).asBool();
+    } catch (JsonRpcException &e) {
+        cerr << e.GetMessage() << endl;
+    }
+}

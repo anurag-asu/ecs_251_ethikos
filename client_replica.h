@@ -7,7 +7,7 @@ class ClientReplica {
     public:
         ClientReplica(string address);
         string GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-        // bool CommitOrAbort(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+        bool CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
 

@@ -19,7 +19,7 @@
 			"content": 10001278326
 		},
 		"returns": {
-			"status": "true"
+			"status": "commit"
 		}
 	},
 	{
@@ -32,7 +32,7 @@
 			"content": 10001278326
 		},
 		"returns": {
-			"status": "true"
+			"status": true
 		}
 	}
 ]
