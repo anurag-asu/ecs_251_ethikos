@@ -16,6 +16,8 @@ public:
   virtual Json::Value  CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
+string chunk2 = "second line as a string";
+
 ReplicaSecondaryFour::ReplicaSecondaryFour(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
 Json::Value ReplicaSecondaryFour::FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
@@ -36,18 +38,6 @@ Json::Value ReplicaSecondaryFour:: CommitOrAbort(const std::string& action, int 
 }
 
 int main() {
-  ifstream in("data.txt");
-  string chunk2[5] = {};
-  int x = 0;
-  string line;
-  while(getline(in,line) && (x < 10)){
-    if (x > 4){
-      chunk2[x] = line;
-    }
-    x++;
-  }
-  in.close();
-  
   HttpServer httpserver(8388);
   ReplicaSecondaryFour s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   

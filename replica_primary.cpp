@@ -24,6 +24,8 @@ public:
   virtual Json::Value  CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
 };
 
+string chunk1 = "first line as a string";
+
 ReplicaPrimary::ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
 Json::Value ReplicaPrimary::FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
@@ -44,16 +46,6 @@ Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, int conten
 }
 
 int main() {
-  ifstream in("data.txt");
-  string chunk1[5] = {};
-  int x = 0;
-  string line;
-  while(getline(in,line) && (x < 5)){
-    chunk1[x] = line;
-    x++;
-  }
-  in.close();
-
   HttpServer httpserver(8384);
   ReplicaPrimary s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   
