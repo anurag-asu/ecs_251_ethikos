@@ -29,6 +29,9 @@ Json::Value MasterServer::FileLookUp(const std::string& fhandle, const std::stri
   result["host_urls"].append("http://localhost:8384");
   result["host_urls"].append("http://localhost:8385");
   result["host_urls"].append("http://localhost:8386");
+  result["host_urls"].append("http://localhost:8387");
+  result["host_urls"].append("http://localhost:8388");
+  result["host_urls"].append("http://localhost:8389");
 
   return result;
 }

@@ -40,5 +40,5 @@ client: replicasecondaryfive
 	${CC} ${CFLAGS} client_replica.cpp client.cpp ${LDFLAGS_CL} -o client
 
 clienttwo: client
-	${CC} ${CFLAGS} client_replica.cpp client_two.cpp ${LDFLAGS_CL} -o clienttwo
+	${CC} ${CFLAGS} client_two.cpp ${LDFLAGS_CL} -o clienttwo
 	
