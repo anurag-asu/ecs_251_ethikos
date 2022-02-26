@@ -10,6 +10,7 @@
 #include "gen/abstractstubserver.h"
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <stdio.h>
+#include <fstream>
 
 using namespace jsonrpc;
 using namespace std;
@@ -43,6 +44,16 @@ Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, int conten
 }
 
 int main() {
+  ifstream in("data.txt");
+  string chunk1[5] = {};
+  int x = 0;
+  string line;
+  while(getline(in,line) && (x < 5)){
+    chunk1[x] = line;
+    x++;
+  }
+  in.close();
+
   HttpServer httpserver(8384);
   ReplicaPrimary s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   

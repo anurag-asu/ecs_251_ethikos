@@ -2,6 +2,7 @@
 #include "gen/abstractstubserver.h"
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <stdio.h>
+#include <fstream>
 
 using namespace jsonrpc;
 using namespace std;
@@ -35,6 +36,18 @@ Json::Value ReplicaSecondaryThree:: CommitOrAbort(const std::string& action, int
 }
 
 int main() {
+  ifstream in("data.txt");
+  string chunk2[5] = {};
+  int x = 0;
+  string line;
+  while(getline(in,line) && (x < 10)){
+    if (x > 4){
+      chunk2[x] = line;
+    }
+    x++;
+  }
+  in.close();
+  
   HttpServer httpserver(8387);
   ReplicaSecondaryThree s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)
   
