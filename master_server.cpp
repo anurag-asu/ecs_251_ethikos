@@ -18,9 +18,14 @@ public:
   virtual Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
   virtual Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
+  virtual void ShowFileContents();
 };
 
 MasterServer::MasterServer(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
+
+void MasterServer::ShowFileContents() {
+  cout<<"no contents in master"<<endl;
+}
 
 Json::Value MasterServer::FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) { 
   Json::Value result;

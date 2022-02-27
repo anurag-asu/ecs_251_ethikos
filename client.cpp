@@ -20,7 +20,9 @@ int main() {
 
     // get votes from all replicas
 
+
     ClientReplica c1{result.get("host_urls","")[0].asString()};
+    c1.ShowFileContents();
     string vote1 = c1.GetVote("test", "123", "dummy", 1,  "01");
     cout<<vote1<<endl;
 
@@ -38,6 +40,8 @@ int main() {
       bool s1 = c1.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
       bool s2 = c2.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
       bool s3 = c3.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+
+      c1.ShowFileContents();
 
       if(s1 && s2 && s3) {
         cout<<"success"<<endl;

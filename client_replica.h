@@ -6,6 +6,7 @@ class ClientReplica {
         string replicaAddress;
     public:
         ClientReplica(string address);
+        void ShowFileContents();
         string GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
         bool CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
 };

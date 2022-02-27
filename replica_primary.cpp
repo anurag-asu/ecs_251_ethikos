@@ -21,12 +21,21 @@ class ReplicaPrimary : public AbstractStubServer {
 public:
   ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type);
 
+  virtual void ShowFileContents();
   virtual Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
   virtual Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
 };
 
 ReplicaPrimary::ReplicaPrimary(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
+
+void ReplicaPrimary::ShowFileContents() {
+  cout<<"displaying first chunk's content"<<endl;
+
+  for(int i=0;i<fileFirstChunkPublic->file_rep.size(); i++) {
+    cout<<"content at index = "<<i<<": "<<fileFirstChunkPublic->file_rep[i]<<endl;
+  }
+}
 
 Json::Value ReplicaPrimary::FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
   Json::Value result;

@@ -13,12 +13,21 @@ class ReplicaSecondaryFive : public AbstractStubServer {
 public:
   ReplicaSecondaryFive(AbstractServerConnector &connector, serverVersion_t type);
 
+  virtual void ShowFileContents();
   virtual Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
   virtual Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
-  virtual Json::Value  CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
+  virtual Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
 };
 
 ReplicaSecondaryFive::ReplicaSecondaryFive(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
+
+void ReplicaSecondaryFive::ShowFileContents() {
+  cout<<"displaying second chunk's content"<<endl;
+
+  for(int i=0;i<fileSecondChunkPublic->file_rep.size(); i++) {
+    cout<<"content at index = "<<i<<": "<<fileSecondChunkPublic->file_rep[i]<<endl;
+  }
+}
 
 Json::Value ReplicaSecondaryFive::FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) {
   Json::Value result;
