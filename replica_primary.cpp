@@ -15,7 +15,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-File *fileFirstChunkPrivate, *fileFirstChunkPublic;
+File *fileFirstChunkPrivatePrimary, *fileFirstChunkPublicPrimary;
 
 class ReplicaPrimary : public AbstractStubServer {
 public:
@@ -32,8 +32,8 @@ ReplicaPrimary::ReplicaPrimary(AbstractServerConnector &connector, serverVersion
 void ReplicaPrimary::ShowFileContents() {
   cout<<"displaying first chunk's content"<<endl;
 
-  for(int i=0;i<fileFirstChunkPublic->file_rep.size(); i++) {
-    cout<<"content at index = "<<i<<": "<<fileFirstChunkPublic->file_rep[i]<<endl;
+  for(int i=0;i<fileFirstChunkPublicPrimary->file_rep.size(); i++) {
+    cout<<"content at index = "<<i<<": "<<fileFirstChunkPublicPrimary->file_rep[i]<<endl;
   }
 }
 
@@ -46,7 +46,7 @@ Json::Value ReplicaPrimary::GetVote(const std::string& content, const std::strin
   Json::Value result;
   
   try {
-    fileFirstChunkPublic->file_rep[offset] = content;
+    fileFirstChunkPrivatePrimary->file_rep[offset] = content;
     result["status"] = "commit";
   } catch(JsonRpcException &e) {
     cout<<e.what();
@@ -59,7 +59,7 @@ Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, const std:
   Json::Value result;
   
   try {
-    fileFirstChunkPrivate->file_rep[offset] = content;
+    fileFirstChunkPublicPrimary->file_rep[offset] = content;
     result["status"] = true;
   } catch(JsonRpcException &e) {
     cout<<e.what();
@@ -71,18 +71,18 @@ Json::Value ReplicaPrimary:: CommitOrAbort(const std::string& action, const std:
 int main() {
 
   File fPvt;
-  fileFirstChunkPrivate = &fPvt;
+  fileFirstChunkPrivatePrimary = &fPvt;
 
-  fileFirstChunkPrivate->file_rep.push_back("1");
-  fileFirstChunkPrivate->file_rep.push_back("2");
-  fileFirstChunkPrivate->file_rep.push_back("3");
+  fileFirstChunkPrivatePrimary->file_rep.push_back("1");
+  fileFirstChunkPrivatePrimary->file_rep.push_back("2");
+  fileFirstChunkPrivatePrimary->file_rep.push_back("3");
 
   File fPub;
-  fileFirstChunkPublic = &fPub;
+  fileFirstChunkPublicPrimary = &fPub;
 
-  fileFirstChunkPublic->file_rep.push_back("1");
-  fileFirstChunkPublic->file_rep.push_back("2");
-  fileFirstChunkPublic->file_rep.push_back("3");
+  fileFirstChunkPublicPrimary->file_rep.push_back("1");
+  fileFirstChunkPublicPrimary->file_rep.push_back("2");
+  fileFirstChunkPublicPrimary->file_rep.push_back("3");
 
   HttpServer httpserver(8384);
   ReplicaPrimary s(httpserver, JSONRPC_SERVER_V1V2); // hybrid server (json-rpc 1.0 & 2.0)

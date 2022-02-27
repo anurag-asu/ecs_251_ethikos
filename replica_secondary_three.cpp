@@ -38,7 +38,7 @@ Json::Value ReplicaSecondaryThree::GetVote(const std::string& content, const std
   Json::Value result;
   
   try {
-    fileSecondChunkPublic->file_rep[offset] = content;
+    fileSecondChunkPrivate->file_rep[offset] = content;
     result["status"] = "commit";
   } catch(JsonRpcException &e) {
     cout<<e.what();
@@ -51,11 +51,11 @@ Json::Value ReplicaSecondaryThree:: CommitOrAbort(const std::string& action, con
   Json::Value result;
   
   try {
-    fileSecondChunkPrivate->file_rep[offset] = content;
-    result["status"] = "commit";
+    fileSecondChunkPublic->file_rep[offset] = content;
+    result["status"] = true;
   } catch(JsonRpcException &e) {
     cout<<e.what();
-    result["status"] = "abort";
+    result["status"] = false;
   }
   return result;
 }

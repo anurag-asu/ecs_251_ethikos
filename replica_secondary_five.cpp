@@ -52,10 +52,10 @@ Json::Value ReplicaSecondaryFive:: CommitOrAbort(const std::string& action, cons
   
   try {
     fileSecondChunkPrivate->file_rep[offset] = content;
-    result["status"] = "commit";
+    result["status"] = true;
   } catch(JsonRpcException &e) {
     cout<<e.what();
-    result["status"] = "abort";
+    result["status"] = false;
   }
   return result; 
 }

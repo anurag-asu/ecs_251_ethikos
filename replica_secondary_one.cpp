@@ -15,7 +15,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-File *fileFirstChunkPrivate, *fileFirstChunkPublic;
+File *fileFirstChunkPrivateSecondaryOne, *fileFirstChunkPublicSecondaryOne;
 
 class ReplicaSecondaryOne : public AbstractStubServer {
 public:
@@ -32,8 +32,8 @@ ReplicaSecondaryOne::ReplicaSecondaryOne(AbstractServerConnector &connector, ser
 void ReplicaSecondaryOne::ShowFileContents() {
   cout<<"displaying first chunk's content"<<endl;
 
-  for(int i=0;i<fileFirstChunkPublic->file_rep.size(); i++) {
-    cout<<"content at index = "<<i<<": "<<fileFirstChunkPublic->file_rep[i]<<endl;
+  for(int i=0;i<fileFirstChunkPublicSecondaryOne->file_rep.size(); i++) {
+    cout<<"content at index = "<<i<<": "<<fileFirstChunkPublicSecondaryOne->file_rep[i]<<endl;
   }
 }
 
@@ -46,7 +46,7 @@ Json::Value ReplicaSecondaryOne::GetVote(const std::string& content, const std::
   Json::Value result;
   
   try {
-    fileFirstChunkPublic->file_rep[offset] = content;
+    fileFirstChunkPrivateSecondaryOne->file_rep[offset] = content;
     result["status"] = "commit";
   } catch(JsonRpcException &e) {
     cout<<e.what();
@@ -57,25 +57,32 @@ Json::Value ReplicaSecondaryOne::GetVote(const std::string& content, const std::
 
 Json::Value ReplicaSecondaryOne:: CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID){
   Json::Value result;
-  result["status"] = true;
-  return result; 
+  
+  try {
+    fileFirstChunkPublicSecondaryOne->file_rep[offset] = content;
+    result["status"] = true;
+  } catch(JsonRpcException &e) {
+    cout<<e.what();
+    result["status"] = false;
+  }
+  return result;  
 }
 
 int main() {
 
   File fPvt;
-  fileFirstChunkPrivate = &fPvt;
+  fileFirstChunkPrivateSecondaryOne = &fPvt;
 
-  fileFirstChunkPrivate->file_rep.push_back("1");
-  fileFirstChunkPrivate->file_rep.push_back("2");
-  fileFirstChunkPrivate->file_rep.push_back("3");
+  fileFirstChunkPrivateSecondaryOne->file_rep.push_back("1");
+  fileFirstChunkPrivateSecondaryOne->file_rep.push_back("2");
+  fileFirstChunkPrivateSecondaryOne->file_rep.push_back("3");
 
   File fPub;
-  fileFirstChunkPublic = &fPub;
+  fileFirstChunkPublicSecondaryOne = &fPub;
 
-  fileFirstChunkPublic->file_rep.push_back("1");
-  fileFirstChunkPublic->file_rep.push_back("2");
-  fileFirstChunkPublic->file_rep.push_back("3");
+  fileFirstChunkPublicSecondaryOne->file_rep.push_back("1");
+  fileFirstChunkPublicSecondaryOne->file_rep.push_back("2");
+  fileFirstChunkPublicSecondaryOne->file_rep.push_back("3");
 
 
   HttpServer httpserver(8385);

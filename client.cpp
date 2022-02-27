@@ -8,40 +8,37 @@
 using namespace jsonrpc;
 using namespace std;
 
-int main() {
-  HttpClient httpclient("http://localhost:8383");
+HttpClient httpclient("http://localhost:8383");
   // StubClient c(httpclient, JSONRPC_CLIENT_V1); //json-rpc 1.0
-  StubClient c(httpclient, JSONRPC_CLIENT_V2); // json-rpc 2.0
+StubClient c(httpclient, JSONRPC_CLIENT_V2); // json-rpc 2.0
 
-  try {
-
-    // get a list of all replica server addresses
-    Json::Value result = c.FileLookUp(1, "123", "dummy", "01");
+void clientFirstChunk() {
+   // get a list of all replica server addresses
+    Json::Value addressChunk1 = c.FileLookUp(1, "123", "dummy", "01");
 
     // get votes from all replicas
+    ClientReplica r1{addressChunk1.get("host_urls","")[0].asString()};
+    r1.ShowFileContents();
 
+    ClientReplica r2{addressChunk1.get("host_urls","")[1].asString()};
+    r2.ShowFileContents();
 
-    ClientReplica c1{result.get("host_urls","")[0].asString()};
-    c1.ShowFileContents();
-    string vote1 = c1.GetVote("test", "123", "dummy", 1,  "01");
-    cout<<vote1<<endl;
+    ClientReplica r3{addressChunk1.get("host_urls","")[2].asString()};
+    r3.ShowFileContents();
 
-    ClientReplica c2{result.get("host_urls","")[1].asString()};
-    string vote2 = c2.GetVote("test", "123", "dummy", 1,  "01");
-    cout<<vote2<<endl;
-
-    ClientReplica c3{result.get("host_urls","")[2].asString()};
-    string vote3 = c3.GetVote("test", "123", "dummy", 1,  "01");
-    cout<<vote3<<endl;
+    string vote1 = r1.GetVote("test", "123", "dummy", 1,  "01");  
+    string vote2 = r2.GetVote("test", "123", "dummy", 1,  "01");
+    string vote3 = r3.GetVote("test", "123", "dummy", 1,  "01");
 
     // send commit/abort to all replicas
-
     if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
-      bool s1 = c1.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
-      bool s2 = c2.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
-      bool s3 = c3.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+      bool s1 = r1.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+      bool s2 = r2.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+      bool s3 = r3.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
 
-      c1.ShowFileContents();
+      r1.ShowFileContents();
+      r2.ShowFileContents();
+      r3.ShowFileContents();
 
       if(s1 && s2 && s3) {
         cout<<"success"<<endl;
@@ -50,9 +47,9 @@ int main() {
       }
 
     } else {
-      bool s1 = c1.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
-      bool s2 = c2.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
-      bool s3 = c3.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+      bool s1 = r1.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+      bool s2 = r2.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+      bool s3 = r3.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
 
       if(s1 && s2 && s3) {
         cout<<"success"<<endl;
@@ -60,7 +57,46 @@ int main() {
         cout<<"failure"<<endl;
       }
     }
+}
 
+void clientFailedInconsistency() {
+  Json::Value addressChunk1 = c.FileLookUp(1, "123", "dummy", "01");
+  Json::Value addressChunk2 = c.FileLookUp(2, "123", "dummy", "01");
+
+  ClientReplica r1{addressChunk1.get("host_urls","")[0].asString()};
+  r1.ShowFileContents();
+
+  ClientReplica r2{addressChunk1.get("host_urls","")[1].asString()};
+  r2.ShowFileContents();
+
+  ClientReplica r3{addressChunk1.get("host_urls","")[2].asString()};
+  r3.ShowFileContents();
+
+  string vote1 = r1.GetVote("test", "123", "dummy", 1,  "01");  
+  string vote2 = r2.GetVote("test", "123", "dummy", 1,  "01");
+  string vote3 = r3.GetVote("test", "123", "dummy", 1,  "01");
+  
+  // send commit/abort to all replicas
+  if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
+    bool s1 = r1.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+    bool s2 = r2.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+
+    // assume network or replica failed and we cannot commit
+    // bool s3 = r3.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+
+    cout<<"Please check the data in replica servers for incosistency"<<endl;
+    r1.ShowFileContents();
+    r2.ShowFileContents();
+    r3.ShowFileContents();
+
+  }
+
+}
+
+int main() {
+  try {
+    // clientFirstChunk();
+    clientFailedInconsistency();
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }

@@ -51,11 +51,11 @@ Json::Value ReplicaSecondaryFour:: CommitOrAbort(const std::string& action, cons
   Json::Value result;
   
   try {
-    fileSecondChunkPrivate->file_rep[offset] = content;
-    result["status"] = "commit";
+    fileSecondChunkPublic->file_rep[offset] = content;
+    result["status"] = true;
   } catch(JsonRpcException &e) {
     cout<<e.what();
-    result["status"] = "abort";
+    result["status"] = false;
   }
   return result; 
 }
