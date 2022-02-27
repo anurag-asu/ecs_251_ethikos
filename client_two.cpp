@@ -16,27 +16,27 @@ int main() {
   try {
 
       // get a list of all replica server addresses
-      Json::Value result = c.FileLookUp("123", "dummy", "01");
+      Json::Value result = c.FileLookUp(2, "123", "dummy", "01");
 
       // get votes from all replicas
-      ClientReplica c4{result.get("host_urls","")[3].asString()};
-      string vote1 = c4.GetVote(1, "","","");
+      ClientReplica c4{result.get("host_urls","")[0].asString()};
+      string vote1 = c4.GetVote("test", "123", "dummy", 1,  "01");
       cout<<vote1<<endl;
 
-      ClientReplica c5{result.get("host_urls","")[4].asString()};
-      string vote2 = c5.GetVote(1, "","","");
+      ClientReplica c5{result.get("host_urls","")[1].asString()};
+      string vote2 = c5.GetVote("test", "123", "dummy", 1,  "01");
       cout<<vote2<<endl;
 
-      ClientReplica c6{result.get("host_urls","")[5].asString()};
-      string vote3 = c6.GetVote(1, "","","");
+      ClientReplica c6{result.get("host_urls","")[2].asString()};
+      string vote3 = c6.GetVote("test", "123", "dummy", 1,  "01");
       cout<<vote3<<endl;
 
       // send commit/abort to all replicas
 
       if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
-        bool s1 = c4.CommitOrAbort("commit", 1, "", "", "");
-        bool s2 = c5.CommitOrAbort("commit", 1, "", "", "");
-        bool s3 = c6.CommitOrAbort("commit", 1, "", "", "");
+        bool s1 = c4.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+        bool s2 = c5.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+        bool s3 = c6.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
 
         if(s1 && s2 && s3) {
           cout<<"success"<<endl;
@@ -45,9 +45,9 @@ int main() {
         }
 
       } else {
-        bool s1 = c4.CommitOrAbort("abort", 1, "", "", "");
-        bool s2 = c5.CommitOrAbort("abort", 1, "", "", "");
-        bool s3 = c6.CommitOrAbort("abort", 1, "", "", "");
+        bool s1 = c4.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+        bool s2 = c5.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+        bool s3 = c6.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
 
         if(s1 && s2 && s3) {
           cout<<"success"<<endl;

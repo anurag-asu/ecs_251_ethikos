@@ -12,9 +12,10 @@ class StubClient : public jsonrpc::Client
     public:
         StubClient(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type = jsonrpc::JSONRPC_CLIENT_V2) : jsonrpc::Client(conn, type) {}
 
-        Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
+        Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
+            p["chunkId"] = chunkId;
             p["fhandle"] = fhandle;
             p["filename"] = filename;
             p["owner_vsID"] = owner_vsID;
@@ -24,12 +25,13 @@ class StubClient : public jsonrpc::Client
             else
                 throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }
-        Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
+        Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
             p["content"] = content;
             p["fhandle"] = fhandle;
             p["filename"] = filename;
+            p["offset"] = offset;
             p["owner_vsID"] = owner_vsID;
             Json::Value result = this->CallMethod("GetVote",p);
             if (result.isObject())
@@ -37,13 +39,14 @@ class StubClient : public jsonrpc::Client
             else
                 throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
         }
-        Json::Value CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
+        Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID) throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
             p["action"] = action;
             p["content"] = content;
             p["fhandle"] = fhandle;
             p["filename"] = filename;
+            p["offset"] = offset;
             p["owner_vsID"] = owner_vsID;
             Json::Value result = this->CallMethod("CommitOrAbort",p);
             if (result.isObject())

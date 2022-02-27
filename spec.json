@@ -4,7 +4,8 @@
         "params": {
             "filename": "1234567890",
             "fhandle": "1234567890",
-            "owner_vsID": "default"
+            "owner_vsID": "default",
+			"chunkId": 1
         },
         "returns": {
 			"replica_host_urls": ["","",""]
@@ -16,7 +17,8 @@
 			"filename": "1234567890",
             "fhandle": "1234567890",
             "owner_vsID": "default",
-			"content": 10001278326
+			"content": "",
+			"offset": 1
 		},
 		"returns": {
 			"status": "commit"
@@ -29,7 +31,8 @@
 			"filename": "1234567890",
             "fhandle": "1234567890",
             "owner_vsID": "default",
-			"content": 10001278326
+			"content": "",
+			"offset": 1
 		},
 		"returns": {
 			"status": true

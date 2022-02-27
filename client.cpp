@@ -15,46 +15,47 @@ int main() {
 
   try {
 
-      // get a list of all replica server addresses
-      Json::Value result = c.FileLookUp("123", "dummy", "01");
+    // get a list of all replica server addresses
+    Json::Value result = c.FileLookUp(1, "123", "dummy", "01");
 
-      // get votes from all replicas
-      ClientReplica c1{result.get("host_urls","")[0].asString()};
-      string vote1 = c1.GetVote(1, "","","");
-      cout<<vote1<<endl;
+    // get votes from all replicas
 
-      ClientReplica c2{result.get("host_urls","")[1].asString()};
-      string vote2 = c2.GetVote(1, "","","");
-      cout<<vote2<<endl;
+    ClientReplica c1{result.get("host_urls","")[0].asString()};
+    string vote1 = c1.GetVote("test", "123", "dummy", 1,  "01");
+    cout<<vote1<<endl;
 
-      ClientReplica c3{result.get("host_urls","")[2].asString()};
-      string vote3 = c3.GetVote(1, "","","");
-      cout<<vote3<<endl;
+    ClientReplica c2{result.get("host_urls","")[1].asString()};
+    string vote2 = c2.GetVote("test", "123", "dummy", 1,  "01");
+    cout<<vote2<<endl;
 
-      // send commit/abort to all replicas
+    ClientReplica c3{result.get("host_urls","")[2].asString()};
+    string vote3 = c3.GetVote("test", "123", "dummy", 1,  "01");
+    cout<<vote3<<endl;
 
-      if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
-        bool s1 = c1.CommitOrAbort("commit", 1, "", "", "");
-        bool s2 = c1.CommitOrAbort("commit", 1, "", "", "");
-        bool s3 = c1.CommitOrAbort("commit", 1, "", "", "");
+    // send commit/abort to all replicas
 
-        if(s1 && s2 && s3) {
-          cout<<"success"<<endl;
-        } else {
-          cout<<"failure"<<endl;
-        }
+    if(vote1 == "commit" && vote1 == vote2 && vote1 == vote3) {
+      bool s1 = c1.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+      bool s2 = c2.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
+      bool s3 = c3.CommitOrAbort("commit", "test", "123", "dummy", 1,  "01");
 
+      if(s1 && s2 && s3) {
+        cout<<"success"<<endl;
       } else {
-        bool s1 = c1.CommitOrAbort("abort", 1, "", "", "");
-        bool s2 = c1.CommitOrAbort("abort", 1, "", "", "");
-        bool s3 = c1.CommitOrAbort("abort", 1, "", "", "");
-
-        if(s1 && s2 && s3) {
-          cout<<"success"<<endl;
-        } else {
-          cout<<"failure"<<endl;
-        }
+        cout<<"failure"<<endl;
       }
+
+    } else {
+      bool s1 = c1.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+      bool s2 = c2.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+      bool s3 = c3.CommitOrAbort("abort", "test", "123", "dummy", 1,  "01");
+
+      if(s1 && s2 && s3) {
+        cout<<"success"<<endl;
+      } else {
+        cout<<"failure"<<endl;
+      }
+    }
 
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;

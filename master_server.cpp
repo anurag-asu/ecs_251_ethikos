@@ -15,33 +15,35 @@ class MasterServer : public AbstractStubServer {
 public:
   MasterServer(AbstractServerConnector &connector, serverVersion_t type);
 
-  virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-  virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
-  virtual Json::Value CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID);
+  virtual Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
+  virtual Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID);
 };
 
 MasterServer::MasterServer(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
-Json::Value MasterServer::FileLookUp(const std::string& fhandle, const std::string& filename, 
-  const std::string& owner_vsID) { 
+Json::Value MasterServer::FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) { 
   Json::Value result;
   
-  result["host_urls"].append("http://localhost:8384");
-  result["host_urls"].append("http://localhost:8385");
-  result["host_urls"].append("http://localhost:8386");
-  result["host_urls"].append("http://localhost:8387");
-  result["host_urls"].append("http://localhost:8388");
-  result["host_urls"].append("http://localhost:8389");
+  if (chunkId == 1) {
+    result["host_urls"].append("http://localhost:8384");
+    result["host_urls"].append("http://localhost:8385");
+    result["host_urls"].append("http://localhost:8386");
+  } else{
+    result["host_urls"].append("http://localhost:8387");
+    result["host_urls"].append("http://localhost:8388");
+    result["host_urls"].append("http://localhost:8389");
+  }
 
   return result;
 }
 
-Json::Value MasterServer::GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+Json::Value MasterServer::GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID){
   Json::Value result;
   return result;
 }
 
-Json::Value MasterServer::CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID){
+Json::Value MasterServer::CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID){
   Json::Value result;
   return result;
 }

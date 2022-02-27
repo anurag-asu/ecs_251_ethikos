@@ -12,26 +12,26 @@ class AbstractStubServer : public jsonrpc::AbstractServer<AbstractStubServer>
     public:
         AbstractStubServer(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<AbstractStubServer>(conn, type)
         {
-            this->bindAndAddMethod(jsonrpc::Procedure("FileLookUp", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::FileLookUpI);
-            this->bindAndAddMethod(jsonrpc::Procedure("GetVote", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "content",jsonrpc::JSON_INTEGER,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::GetVoteI);
-            this->bindAndAddMethod(jsonrpc::Procedure("CommitOrAbort", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "action",jsonrpc::JSON_STRING,"content",jsonrpc::JSON_INTEGER,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::CommitOrAbortI);
+            this->bindAndAddMethod(jsonrpc::Procedure("FileLookUp", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "chunkId",jsonrpc::JSON_INTEGER,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::FileLookUpI);
+            this->bindAndAddMethod(jsonrpc::Procedure("GetVote", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "content",jsonrpc::JSON_STRING,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"offset",jsonrpc::JSON_INTEGER,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::GetVoteI);
+            this->bindAndAddMethod(jsonrpc::Procedure("CommitOrAbort", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "action",jsonrpc::JSON_STRING,"content",jsonrpc::JSON_STRING,"fhandle",jsonrpc::JSON_STRING,"filename",jsonrpc::JSON_STRING,"offset",jsonrpc::JSON_INTEGER,"owner_vsID",jsonrpc::JSON_STRING, NULL), &AbstractStubServer::CommitOrAbortI);
         }
 
         inline virtual void FileLookUpI(const Json::Value &request, Json::Value &response)
         {
-            response = this->FileLookUp(request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
+            response = this->FileLookUp(request["chunkId"].asInt(), request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
         }
         inline virtual void GetVoteI(const Json::Value &request, Json::Value &response)
         {
-            response = this->GetVote(request["content"].asInt(), request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
+            response = this->GetVote(request["content"].asString(), request["fhandle"].asString(), request["filename"].asString(), request["offset"].asInt(), request["owner_vsID"].asString());
         }
         inline virtual void CommitOrAbortI(const Json::Value &request, Json::Value &response)
         {
-            response = this->CommitOrAbort(request["action"].asString(), request["content"].asInt(), request["fhandle"].asString(), request["filename"].asString(), request["owner_vsID"].asString());
+            response = this->CommitOrAbort(request["action"].asString(), request["content"].asString(), request["fhandle"].asString(), request["filename"].asString(), request["offset"].asInt(), request["owner_vsID"].asString());
         }
-        virtual Json::Value FileLookUp(const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
-        virtual Json::Value GetVote(int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
-        virtual Json::Value CommitOrAbort(const std::string& action, int content, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
+        virtual Json::Value FileLookUp(int chunkId, const std::string& fhandle, const std::string& filename, const std::string& owner_vsID) = 0;
+        virtual Json::Value GetVote(const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID) = 0;
+        virtual Json::Value CommitOrAbort(const std::string& action, const std::string& content, const std::string& fhandle, const std::string& filename, int offset, const std::string& owner_vsID) = 0;
 };
 
 #endif //JSONRPC_CPP_STUB_ABSTRACTSTUBSERVER_H_
