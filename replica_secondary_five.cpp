@@ -62,15 +62,15 @@ Json::Value ReplicaSecondaryFive:: CommitOrAbort(const std::string& action, cons
 
 int main() {
 
-  File fPvt;
-  fileSecondChunkPrivate = &fPvt;
+  File fPvt5;
+  fileSecondChunkPrivate = &fPvt5;
 
   fileSecondChunkPrivate->file_rep.push_back("1");
   fileSecondChunkPrivate->file_rep.push_back("2");
   fileSecondChunkPrivate->file_rep.push_back("3");
 
-  File fPub;
-  fileSecondChunkPublic = &fPub;
+  File fPub5;
+  fileSecondChunkPublic = &fPub5;
 
   fileSecondChunkPublic->file_rep.push_back("1");
   fileSecondChunkPublic->file_rep.push_back("2");

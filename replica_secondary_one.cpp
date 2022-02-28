@@ -70,15 +70,15 @@ Json::Value ReplicaSecondaryOne:: CommitOrAbort(const std::string& action, const
 
 int main() {
 
-  File fPvt;
-  fileFirstChunkPrivateSecondaryOne = &fPvt;
+  File fPvt21;
+  fileFirstChunkPrivateSecondaryOne = &fPvt21;
 
   fileFirstChunkPrivateSecondaryOne->file_rep.push_back("1");
   fileFirstChunkPrivateSecondaryOne->file_rep.push_back("2");
   fileFirstChunkPrivateSecondaryOne->file_rep.push_back("3");
 
-  File fPub;
-  fileFirstChunkPublicSecondaryOne = &fPub;
+  File fPub21;
+  fileFirstChunkPublicSecondaryOne = &fPub21;
 
   fileFirstChunkPublicSecondaryOne->file_rep.push_back("1");
   fileFirstChunkPublicSecondaryOne->file_rep.push_back("2");
