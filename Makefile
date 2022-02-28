@@ -5,7 +5,7 @@ CFLAGS = -g -I/usr/include/jsoncpp
 LDFLAGS_SV = -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server
 LDFLAGS_CL = -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client
 
-all: abstractstubserver.h stubclient.h masterserver replicaprimary replicasecondaryone replicasecondarytwo replicasecondarythree replicasecondaryfour replicasecondaryfive client clienttwo
+all: abstractstubserver.h stubclient.h masterserver replicaprimary replicasecondaryone replicasecondarytwo replicasecondarythree replicasecondaryfour replicasecondaryfive client clienttwo clientserialdemo
 
 abstractstubserver.h: spec.json
 	jsonrpcstub spec.json --cpp-server=AbstractStubServer
@@ -41,4 +41,7 @@ client: replicasecondaryfive
 
 clienttwo: client
 	${CC} ${CFLAGS} client_replica.cpp client_two.cpp ${LDFLAGS_CL} -o clienttwo
+
+clientserialdemo: clienttwo
+	${CC} ${CFLAGS} client_replica.cpp client_serial_demo.cpp ${LDFLAGS_CL} -o clientserialdemo
 	
