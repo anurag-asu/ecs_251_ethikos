@@ -41,7 +41,7 @@ int main() {
 
   // returning an item for a customer
   // replace 123 with the assigned secret key above
-  Json::Value r1 = c.returnItem(true, c1["custId"].asInt(), 102, o1["orderId"].asInt(), "123", 1);
+  Json::Value r1 = c.returnItem(true, c1["custId"].asInt(), 102, o1["orderId"].asInt(), k1["key"].asInt(), 1);
   cout<<"return processed successfully"<<endl;
   cout<<r1.toStyledString();
 
